@@ -31,7 +31,7 @@ jobs:
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf
         with:
-          ruby-version: 3.2.2
+          ruby-version: 3.2.1
           bundler-cache: true
 
       - name: Install dependencies
@@ -56,7 +56,7 @@ jobs:
       - name: Install Ruby and gems
         uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf
         with:
-          ruby-version: 3.2.2
+          ruby-version: 3.2.1
           bundler-cache: true
 
       - name: Install dependencies
