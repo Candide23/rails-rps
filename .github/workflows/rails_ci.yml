@@ -1,14 +1,14 @@
+# This workflow will install a prebuilt Ruby version, install dependencies, and
+# run tests and linters.
 name: "Ruby on Rails CI"
-
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-
 jobs:
   test:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     services:
       postgres:
         image: postgres:11-alpine
@@ -24,55 +24,31 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Ensure Gemfile exists
-        run: ls -la && test -f Gemfile
-
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
-          ruby-version: 3.2.1
           bundler-cache: true
-
-      - name: Install dependencies
-        run: bundle install
-
       - name: Set up database schema
         run: bin/rails db:schema:load
-
-      - name: Run RSpec tests
+      # This runs the tests in the spec/ folder
+      - name: Run rspec tests
         run: bundle exec rspec
 
-
   lint:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Ensure Gemfile exists
-        run: ls -la && test -f Gemfile
-
       - name: Install Ruby and gems
-        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf
+        uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf # v1.146.0
         with:
-          ruby-version: 3.2.1
           bundler-cache: true
-
-      - name: Install dependencies
-        run: bundle install
-
+      # Can add more (eg bundler-audit, brakeman, etc.)
       - name: Lint Ruby files
         run: bundle exec rubocop --parallel
-
-      - name: Set up Node.js
+      - name: Lint Javascript files
         uses: actions/setup-node@v3
         with:
-          node-version: 20
-
-      - name: Install JS dependencies
-        run: npm ci
-
-      - name: Run JS linter
-        run: npm run lint
-
+          node-version: ${{ matrix.node }}
+      - run: npm ci
+      - run: npm run lint
